@@ -16,6 +16,7 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #0a0b0e; color: 
 .card:hover { border-color: #7dd3c0; }
 select, textarea { background: #0a0b0e; border: 1px solid #333; color: white; }
 #canvas3d { width: 100%; height: 280px; background: #000; border-radius: 12px; }
+.info { font-size: 0.75rem; color: #9ca3af; margin-top: 0.5rem; }
 </style>
 </head>
 <body class="min-h-screen">
@@ -28,7 +29,7 @@ select, textarea { background: #0a0b0e; border: 1px solid #333; color: white; }
 
 <div class="max-w-7xl mx-auto px-6 py-10">
   <h1 class="text-4xl md:text-5xl font-bold mb-2">Build Your Silent Mini Drone</h1>
-  <p class="text-gray-400 mb-10 max-w-3xl">Selections update the 2D diagram and 3D preview in real time. Weight, flight time (with physics), and cost update live.</p>
+  <p class="text-gray-400 mb-10 max-w-3xl">Deep options with real parts research. Click selections for details. Live 2D/3D, weight, physics flight time, cost. Custom software & bodies available.</p>
 
   <div class="grid lg:grid-cols-12 gap-8">
     <!-- Options -->
@@ -36,56 +37,67 @@ select, textarea { background: #0a0b0e; border: 1px solid #333; color: white; }
       <div class="card p-6">
         <h3 class="accent text-lg font-semibold mb-3">Frame / Body</h3>
         <select id="frame" onchange="update()" class="w-full p-3 rounded-lg">
-          <option value="micro_3d" data-w="32" data-base="45" data-type="open">Micro 3D PETG-CF Open — 32g</option>
-          <option value="whoop_ducted" data-w="38" data-base="55" data-type="ducted">Ducted Whoop 3D — 38g</option>
-          <option value="tooth_cf" data-w="45" data-base="70" data-type="open">Toothpick Carbon Fiber — 45g</option>
-          <option value="enclosed_3d" data-w="48" data-base="80" data-type="enclosed">Enclosed 3D Body — 48g</option>
-          <option value="custom_3d" data-w="40" data-base="120" data-type="custom">Fully Custom 3D Print Body</option>
+          <option value="micro_3d" data-w="32" data-base="45" data-type="open" data-info="Ultralight 3D PETG-CF. Ideal for silent micro. Fully custom shapes, ducts, mounts possible. ~25-35g.">Micro 3D PETG-CF Open — 32g</option>
+          <option value="whoop_ducted" data-w="38" data-base="55" data-type="ducted" data-info="Ducted for prop protection and slight noise reduction. Good indoor/outdoor hybrid.">Ducted Whoop 3D — 38g</option>
+          <option value="tooth_cf" data-w="45" data-base="70" data-type="open" data-info="Stiff carbon fiber. Better durability and tuning than pure plastic. ~30-50g.">Toothpick Carbon Fiber — 45g</option>
+          <option value="enclosed_3d" data-w="48" data-base="80" data-type="enclosed" data-info="Enclosed for weather resistance and cleaner look. Custom design recommended.">Enclosed 3D Body — 48g</option>
+          <option value="custom_3d" data-w="40" data-base="120" data-type="custom" data-info="Fully custom designed and 3D printed body. Describe exact needs in notes. We design it.">Fully Custom 3D Print Body</option>
         </select>
+        <p class="info" id="frameInfo"></p>
       </div>
 
       <div class="card p-6">
         <h3 class="accent text-lg font-semibold mb-3">Quiet Props</h3>
         <select id="props" onchange="update()" class="w-full p-3 rounded-lg">
-          <option value="stealth" data-w="8" data-base="18" data-noise="low" data-color="#ff6b6b">Low-Noise Stealth Props</option>
-          <option value="multi" data-w="10" data-base="15" data-noise="low" data-color="#4ade80">Multi-Blade Quiet Props</option>
-          <option value="standard" data-w="6" data-base="12" data-noise="med" data-color="#c5cdd8">Standard Bi-Blade</option>
+          <option value="stealth" data-w="8" data-base="18" data-noise="low" data-color="#ff6b6b" data-info="Master Airscrew style. Up to ~30-37% noise reduction via optimized geometry and lower RPM.">Low-Noise Stealth Props</option>
+          <option value="multi" data-w="10" data-base="15" data-noise="low" data-color="#4ade80" data-info="3-4 blade designs reduce tip speed and noise. Slight efficiency trade-off.">Multi-Blade Quiet Props</option>
+          <option value="standard" data-w="6" data-base="12" data-noise="med" data-color="#c5cdd8" data-info="Standard bi-blade. Higher efficiency but louder tip vortex noise.">Standard Bi-Blade</option>
         </select>
+        <p class="info" id="propsInfo"></p>
       </div>
 
       <div class="card p-6">
         <h3 class="accent text-lg font-semibold mb-3">Battery</h3>
         <select id="battery" onchange="update()" class="w-full p-3 rounded-lg">
-          <option value="2s450" data-w="28" data-base="22" data-wh="3.4" data-v="7.4">2S 450mAh — 3.4Wh — 28g</option>
-          <option value="2s850" data-w="42" data-base="28" data-wh="6.3" data-v="7.4">2S 850mAh — 6.3Wh — 42g</option>
-          <option value="3s450" data-w="38" data-base="26" data-wh="5.1" data-v="11.1">3S 450mAh — 5.1Wh — 38g</option>
+          <option value="2s450" data-w="28" data-base="22" data-wh="3.4" data-v="7.4" data-info="Lightest common option. Best for pure silent micro flight time.">2S 450mAh — 3.4Wh — 28g</option>
+          <option value="2s850" data-w="42" data-base="28" data-wh="6.3" data-v="7.4" data-info="Good balance of capacity and weight for longer sessions.">2S 850mAh — 6.3Wh — 42g</option>
+          <option value="3s450" data-w="38" data-base="26" data-wh="5.1" data-v="11.1" data-info="More power for heavier AI or sensor payloads.">3S 450mAh — 5.1Wh — 38g</option>
         </select>
+        <p class="info" id="batteryInfo"></p>
       </div>
 
       <div class="card p-6">
         <h3 class="accent text-lg font-semibold mb-3">Sensors / Camera / LiDAR</h3>
         <select id="sensors" onchange="update()" class="w-full p-3 rounded-lg">
-          <option value="none" data-w="0" data-base="0">None</option>
-          <option value="fpv_cam" data-w="8" data-base="35">FPV Camera — 8g</option>
-          <option value="hd_cam" data-w="15" data-base="85">HD Camera — 15g</option>
-          <option value="lidar_mini" data-w="12" data-base="45">Mini LiDAR — 12g</option>
-          <option value="lidar_scan" data-w="65" data-base="180">Scanning Micro LiDAR — 65g</option>
+          <option value="none" data-w="0" data-base="0" data-info="No additional sensors.">None</option>
+          <option value="fpv_cam" data-w="8" data-base="35" data-info="Light analog or digital FPV cam (Caddx Ant Lite class). Basic vision, low weight.">FPV Camera — 8g</option>
+          <option value="hd_cam" data-w="15" data-base="85" data-info="HD recording camera (RunCam Thumb style). Better image, still light.">HD Camera — 15g</option>
+          <option value="lidar_mini" data-w="12" data-base="45" data-info="Benewake TFmini-S / Plus class. 5-12g, short range altitude/obstacle. Low power.">Mini LiDAR (TFmini) — 12g</option>
+          <option value="lidar_scan" data-w="65" data-base="180" data-info="Scanning micro LiDAR. More capable mapping/avoidance but heavier.">Scanning Micro LiDAR — 65g</option>
+          <option value="imu_gps" data-w="8" data-base="40" data-info="High-quality IMU + GPS module for better navigation and stability.">IMU + GPS Combo — 8g</option>
         </select>
+        <p class="info" id="sensorsInfo"></p>
       </div>
 
       <div class="card p-6">
-        <h3 class="accent text-lg font-semibold mb-3">AI Compute</h3>
+        <h3 class="accent text-lg font-semibold mb-3">AI Compute (Local or Cloud)</h3>
         <select id="ai" onchange="update()" class="w-full p-3 rounded-lg">
-          <option value="none" data-w="0" data-base="0" data-power="0">None</option>
-          <option value="pi_zero" data-w="10" data-base="45" data-power="1.5">Pi Zero 2 W — Light / Non-real-time</option>
-          <option value="pi5" data-w="55" data-base="95" data-power="6">Raspberry Pi 5 — Limited real-time</option>
-          <option value="orin_nano" data-w="180" data-base="320" data-power="15">Jetson Orin Nano — Real-time AI</option>
+          <option value="none" data-w="0" data-base="0" data-power="0" data-info="No onboard AI. Pure manual or basic FC.">None</option>
+          <option value="pi_zero" data-w="10" data-base="45" data-power="1.5" data-info="Raspberry Pi Zero 2 W. Extremely light/cheap. Suitable for logging, simple scripts, non-real-time. ~1-2W.">Pi Zero 2 W — Light / Non-real-time — 10g</option>
+          <option value="pi5" data-w="55" data-base="95" data-power="6" data-info="Raspberry Pi 5. Affordable. Limited real-time AI on CPU. Pair with Hailo HAT for better vision. ~5-8W.">Raspberry Pi 5 — 55g — Limited real-time</option>
+          <option value="hailo" data-w="20" data-base="120" data-power="3" data-info="Hailo-8 or Hailo-8L accelerator (often with Pi). Excellent TOPS/W for vision. Efficient edge AI. ~2-4W.">Hailo-8 Accelerator — Efficient Vision AI — 20g</option>
+          <option value="coral" data-w="15" data-base="40" data-power="2" data-info="Google Coral Edge TPU. Low power, good for fixed TFLite models. Lightweight.">Google Coral — 15g — Low Power</option>
+          <option value="orin_nano" data-w="180" data-base="320" data-power="15" data-info="Jetson Orin Nano Super. True real-time AI (up to 67 TOPS). CUDA stack. Heavy and power-hungry. Best for complex vision/follow. ~7-25W.">Jetson Orin Nano — Real-time AI — ~180g</option>
+          <option value="cloud" data-w="5" data-base="0" data-power="1" data-info="Cloud inference (stream video, run AI remotely). Minimal onboard weight. Requires connectivity. We can help set up the pipeline.">Cloud AI (minimal onboard) — Streaming</option>
+          <option value="custom_sw" data-w="0" data-base="250" data-power="0" data-info="We custom build and integrate the AI software (object detection, follow, mapping, etc.) for your chosen hardware. Describe goals in notes.">Custom AI Software Build — We develop it</option>
         </select>
+        <p class="info" id="aiInfo"></p>
       </div>
 
       <div class="card p-6">
-        <h3 class="accent text-lg font-semibold mb-3">Custom Notes</h3>
-        <textarea id="notes" class="w-full p-3 rounded-lg h-24" placeholder="Custom body design, AI models, mounts..."></textarea>
+        <h3 class="accent text-lg font-semibold mb-3">Customization Requests</h3>
+        <textarea id="notes" class="w-full p-3 rounded-lg h-28" placeholder="Describe custom body design, specific AI models or software features, sensor mounts, colors, exact requirements, anything..."></textarea>
+        <p class="info">We can design and 3D print any body, source specific parts, or build custom AI software for your use case.</p>
       </div>
     </div>
 
@@ -181,12 +193,10 @@ function init3D() {
 
 function rebuild3D() {
   while (droneGroup.children.length) droneGroup.remove(droneGroup.children[0]);
-  // Simple body
   const bodyGeo = new THREE.BoxGeometry(1.2, 0.3, 0.8);
   const bodyMat = new THREE.MeshPhongMaterial({ color: 0x1a1d24 });
   const body = new THREE.Mesh(bodyGeo, bodyMat);
   droneGroup.add(body);
-  // Arms
   const armGeo = new THREE.BoxGeometry(0.08, 0.08, 1.6);
   const armMat = new THREE.MeshPhongMaterial({ color: 0xa0aec0 });
   for (let i = 0; i < 4; i++) {
@@ -194,7 +204,6 @@ function rebuild3D() {
     arm.rotation.y = (i * Math.PI) / 2;
     droneGroup.add(arm);
   }
-  // Props
   const propColor = document.getElementById('props').selectedOptions[0].dataset.color || '#ff6b6b';
   const propGeo = new THREE.BoxGeometry(0.6, 0.04, 0.08);
   const propMat = new THREE.MeshPhongMaterial({ color: propColor });
@@ -204,8 +213,7 @@ function rebuild3D() {
     prop.position.set(p[0], 0.2, p[2]);
     droneGroup.add(prop);
   });
-  // AI box if selected
-  if (document.getElementById('ai').value !== 'none') {
+  if (document.getElementById('ai').value !== 'none' && document.getElementById('ai').value !== 'cloud') {
     const aiGeo = new THREE.BoxGeometry(0.4, 0.15, 0.3);
     const aiMat = new THREE.MeshPhongMaterial({ color: 0x4a90d9 });
     const ai = new THREE.Mesh(aiGeo, aiMat);
@@ -233,11 +241,13 @@ function update() {
       noise = opt.dataset.noise === 'low' ? 'Low' : 'Medium';
       propColor = opt.dataset.color || '#ff6b6b';
     }
+    // Update info panels
+    const infoEl = document.getElementById(id + 'Info');
+    if (infoEl && opt.dataset.info) infoEl.textContent = opt.dataset.info;
   });
 
-  // Better physics: hover power ≈ (weight_g / efficiency) + extras
-  // Efficiency ~6-8 g/W for mini quiet builds
-  const efficiency = 7; // g per watt
+  // Physics: efficiency ~6-8 g/W for mini quiet
+  const efficiency = 7;
   const hoverPower = (w / efficiency) + powerExtra;
   const usableWh = wh * 0.8;
   const minutes = hoverPower > 0 ? Math.round((usableWh / hoverPower) * 60) : 0;
@@ -248,17 +258,16 @@ function update() {
   document.getElementById('time').textContent = minutes + ' min';
   document.getElementById('cost').textContent = '$' + totalCost;
   document.getElementById('noise').textContent = noise;
-  document.getElementById('physicsNote').textContent = `Hover ~${Math.round(hoverPower)}W | Usable ${usableWh.toFixed(1)}Wh | Efficiency ~${efficiency} g/W`;
+  document.getElementById('physicsNote').textContent = `Hover ~${Math.round(hoverPower)}W | Usable ${usableWh.toFixed(1)}Wh | Efficiency ~${efficiency} g/W | TWR est. ${( (w*0.0098) / (hoverPower*0.5) ).toFixed(1) || 'N/A'}`;
 
-  // Update 2D SVG
+  // Update 2D
   document.querySelectorAll('.prop').forEach(el => el.setAttribute('fill', propColor));
-  const hasAI = document.getElementById('ai').value !== 'none';
+  const hasAI = document.getElementById('ai').value !== 'none' && document.getElementById('ai').value !== 'cloud';
   document.getElementById('aiBox').classList.toggle('hidden', !hasAI);
   document.getElementById('aiLabel').classList.toggle('hidden', !hasAI);
   const hasSensor = document.getElementById('sensors').value !== 'none';
   document.getElementById('sensor').classList.toggle('hidden', !hasSensor);
 
-  // Frame type visual (simple stroke change)
   const frameType = document.getElementById('frame').selectedOptions[0].dataset.type;
   const body = document.getElementById('body');
   if (frameType === 'enclosed') body.setAttribute('stroke', '#88a494');
@@ -269,7 +278,8 @@ function update() {
 }
 
 function checkout() {
-  alert('Configuration ready for checkout.\nWeight: ' + document.getElementById('weight').textContent + '\nFlight Time: ' + document.getElementById('time').textContent + '\nCost: ' + document.getElementById('cost').textContent);
+  const notes = document.getElementById('notes').value;
+  alert('Configuration ready for checkout.\nWeight: ' + document.getElementById('weight').textContent + '\nFlight Time: ' + document.getElementById('time').textContent + '\nCost: ' + document.getElementById('cost').textContent + '\n\nCustom notes: ' + (notes || 'None'));
 }
 
 init3D();
