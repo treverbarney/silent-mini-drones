@@ -1,68 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SilentForge | Custom Silent Mini Drones</title>
-  <link rel="stylesheet" href="css/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SilentForge | Custom Silent Mini Drones</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Inter', system-ui, sans-serif; background: #0a0b0e; color: #e8e9ed; }
+.accent { color: #7dd3c0; }
+.btn-primary { background: linear-gradient(135deg, #7dd3c0, #5ab8a8); color: #0a0b0e; font-weight: 600; transition: all 0.2s; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(125,211,192,0.3); }
+.card { background: #12141a; border: 1px solid #252830; border-radius: 16px; transition: all 0.3s; }
+.card:hover { border-color: #7dd3c0; transform: translateY(-4px); }
+.hero-bg { background: linear-gradient(to bottom, rgba(10,11,14,0.7), #0a0b0e), url('https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=1600&q=80') center/cover; }
+</style>
 </head>
-<body>
-  <header>
-    <nav class="container">
-      <div class="logo">Silent<span>Forge</span></div>
-      <ul>
-        <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="configure.html">Build</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="legal.html">Legal</a></li>
-      </ul>
-    </nav>
-  </header>
+<body class="min-h-screen">
+<nav class="border-b border-gray-800/50 backdrop-blur-md sticky top-0 z-50 bg-[#0a0b0e]/80">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <div class="text-2xl font-bold">Silent<span class="accent">Forge</span></div>
+    <div class="space-x-8 text-sm font-medium">
+      <a href="#" onclick="showPage('home')" class="hover:accent transition">Home</a>
+      <a href="#" onclick="showPage('config')" class="hover:accent transition">Build</a>
+      <a href="#" onclick="showPage('about')" class="hover:accent transition">About</a>
+    </div>
+  </div>
+</nav>
 
-  <section class="hero">
-    <div class="container">
-      <h1>Custom Silent Mini Drones<br>3D Printed to Your Specs</h1>
-      <p>Design your ultra-quiet micro or mini drone. Choose frames, quiet props, cameras, lights, AI chips, and custom prints. We source the real parts, 3D print the frame, and ship your kit or assembled drone.</p>
-      <a href="configure.html" class="btn">Start Building</a>
-      <a href="about.html" class="btn btn-secondary" style="margin-left:1rem;">How It Works</a>
+<div id="page-home" class="page">
+  <section class="hero-bg min-h-[80vh] flex items-center">
+    <div class="max-w-7xl mx-auto px-6 py-20">
+      <h1 class="text-6xl md:text-7xl font-bold leading-tight mb-6">Custom Silent<br><span class="accent">Mini Drones</span></h1>
+      <p class="text-xl text-gray-300 max-w-2xl mb-10">Design ultra-quiet 3D-printed mini drones. Live diagram, real weight & flight time calculations, AI options, full custom builds.</p>
+      <button onclick="showPage('config')" class="btn-primary px-8 py-4 rounded-xl text-lg">Start Building Yours</button>
     </div>
   </section>
+  <section class="py-20 px-6 max-w-7xl mx-auto">
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="card p-8"><div class="text-4xl mb-4">🔇️</div><h3 class="text-xl font-semibold mb-2 accent">Truly Silent</h3><p class="text-gray-400">Low-KV motors, multi-blade quiet props, lightweight frames for neighborhood-friendly flight.</p></div>
+      <div class="card p-8"><div class="text-4xl mb-4">📊</div><h3 class="text-xl font-semibold mb-2 accent">Live Stats</h3><p class="text-gray-400">Weight, flight time, TWR, and cost update instantly as you configure.</p></div>
+      <div class="card p-8"><div class="text-4xl mb-4">🤖</div><h3 class="text-xl font-semibold mb-2 accent">AI Ready</h3><p class="text-gray-400">VOXL, Jetson, Coral, or custom AI. Notes for specific models and capabilities.</p></div>
+    </div>
+  </section>
+</div>
 
-  <section class="section">
-    <div class="container">
-      <h2 style="text-align:center; margin-bottom:2rem; color:var(--sage);">Why SilentForge?</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>Truly Quiet</h3>
-          <p>Low-RPM motors, multi-blade quiet props, ducted options, and minimal airflow obstruction. Designed for neighborhood-friendly flight.</p>
-        </div>
-        <div class="card">
-          <h3>Fully Custom</h3>
-          <p>Cameras, lights, sensors, AI modules (Coral, Jetson Orin Nano, VOXL, Hailo, ESP32), custom 3D mounts, and notes for anything you want.</p>
-        </div>
-        <div class="card">
-          <h3>Live Stats</h3>
-          <p>Watch weight, estimated flight time, cost, and noise rating update as you build. Real parts data so you know what you’re getting.</p>
-        </div>
-        <div class="card">
-          <h3>End-to-End</h3>
-          <p>Configure → Review BOM → Checkout → Pay via Venmo or ACH. We order parts and print your frame after payment.</p>
-        </div>
+<div id="page-config" class="page hidden py-10 px-6 max-w-7xl mx-auto">
+  <h2 class="text-4xl font-bold mb-8">Configure Your Silent Mini</h2>
+  <div class="grid lg:grid-cols-5 gap-8">
+    <div class="lg:col-span-2 space-y-4">
+      <div class="card p-5">
+        <label class="block text-sm font-medium mb-2 accent">Frame</label>
+        <select id="frame" onchange="updateBuild()" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3">
+          <option value="micro" data-w="35" data-p="22">3D Micro Silent PETG-CF — 35g</option>
+          <option value="whoop" data-w="28" data-p="18">Ducted Whoop — 28g</option>
+          <option value="tooth" data-w="32" data-p="20">Toothpick — 32g</option>
+        </select>
+      </div>
+      <div class="card p-5">
+        <label class="block text-sm font-medium mb-2 accent">Motors + Quiet Props</label>
+        <select id="motors" onchange="updateBuild()" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3">
+          <option value="hm1202" data-w="18" data-p="58" data-thrust="320">Happymodel 1202.5 + Quiet 3-blade — Low Noise</option>
+          <option value="1404" data-w="48" data-p="72" data-thrust="600">1404 Efficient — Medium Noise</option>
+        </select>
+      </div>
+      <div class="card p-5">
+        <label class="block text-sm font-medium mb-2 accent">Battery</label>
+        <select id="battery" onchange="updateBuild()" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3">
+          <option value="2s" data-w="26" data-p="19" data-wh="3.42">LAVA 2S 450mAh — 3.42Wh</option>
+          <option value="3s" data-w="38" data-p="24" data-wh="5.13">LAVA 3S 450mAh — 5.13Wh</option>
+        </select>
+      </div>
+      <div class="card p-5">
+        <label class="block text-sm font-medium mb-2 accent">AI Module</label>
+        <select id="ai" onchange="updateBuild()" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3">
+          <option value="none" data-w="0" data-p="0" data-power="0">None</option>
+          <option value="voxl" data-w="22" data-p="1250" data-power="5">VOXL 2 Mini — 15 TOPS</option>
+          <option value="orin" data-w="160" data-p="290" data-power="12">Jetson Orin Nano — 67 TOPS</option>
+        </select>
+      </div>
+      <div class="card p-5">
+        <label class="block text-sm font-medium mb-2 accent">Custom Notes / 3D Requests</label>
+        <textarea id="notes" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3 h-24" placeholder="Custom mounts, AI models, colors, anything..."></textarea>
       </div>
     </div>
-  </section>
-
-  <section class="section" style="background:#111318;">
-    <div class="container" style="text-align:center;">
-      <h2 style="color:var(--sage); margin-bottom:1rem;">AI-Ready Builds</h2>
-      <p style="max-width:700px; margin:0 auto 1.5rem; color:var(--steel);">Add edge AI: object detection, follow-me, obstacle avoidance, custom models. Choose from Coral (2W / 4 TOPS), Hailo, Jetson Orin Nano Super (67 TOPS), VOXL 2 Mini, or describe your own AI needs.</p>
-      <a href="configure.html" class="btn">Add AI to Your Drone</a>
+    <div class="lg:col-span-3">
+      <div class="card p-6 mb-6">
+        <h3 class="accent mb-4 text-lg font-semibold">Live Build Preview</h3>
+        <div class="bg-black/40 rounded-xl p-4 flex justify-center">
+          <svg viewBox="0 0 500 350" class="w-full max-w-lg h-64">
+            <defs><linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2a2e35"/><stop offset="100%" stop-color="#1a1d24"/></linearGradient></defs>
+            <rect x="190" y="140" width="120" height="70" rx="16" fill="url(#bodyGrad)" stroke="#7dd3c0" stroke-width="2"/>
+            <line x1="250" y1="175" x2="80" y2="60" stroke="#a0aec0" stroke-width="6" stroke-linecap="round"/>
+            <line x1="250" y1="175" x2="420" y2="60" stroke="#a0aec0" stroke-width="6" stroke-linecap="round"/>
+            <line x1="250" y1="175" x2="80" y2="290" stroke="#a0aec0" stroke-width="6" stroke-linecap="round"/>
+            <line x1="250" y1="175" x2="420" y2="290" stroke="#a0aec0" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="70" cy="50" r="18" fill="#7dd3c0"/>
+            <circle cx="430" cy="50" r="18" fill="#7dd3c0"/>
+            <circle cx="70" cy="300" r="18" fill="#7dd3c0"/>
+            <circle cx="430" cy="300" r="18" fill="#7dd3c0"/>
+            <g id="props" opacity="0.9">
+              <ellipse cx="70" cy="50" rx="32" ry="8" fill="#ff6b6b" transform="rotate(35 70 50)"/>
+              <ellipse cx="430" cy="50" rx="32" ry="8" fill="#ff6b6b" transform="rotate(-35 430 50)"/>
+              <ellipse cx="70" cy="300" rx="32" ry="8" fill="#ff6b6b" transform="rotate(-35 70 300)"/>
+              <ellipse cx="430" cy="300" rx="32" ry="8" fill="#ff6b6b" transform="rotate(35 430 300)"/>
+            </g>
+            <rect id="cam" x="210" y="120" width="80" height="28" rx="6" fill="#c5cdd8" class="hidden"/>
+            <rect id="aiBox" x="205" y="185" width="90" height="30" rx="6" fill="#4a90d9" class="hidden"/>
+            <text id="aiTxt" x="250" y="205" text-anchor="middle" fill="white" font-size="12" class="hidden">AI</text>
+          </svg>
+        </div>
+      </div>
+      <div class="card p-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+          <div><div class="text-3xl font-bold accent" id="w">0g</div><div class="text-xs text-gray-400 mt-1">Weight</div></div>
+          <div><div class="text-3xl font-bold accent" id="t">0 min</div><div class="text-xs text-gray-400 mt-1">Flight Time</div></div>
+          <div><div class="text-3xl font-bold accent" id="c">$0</div><div class="text-xs text-gray-400 mt-1">Est. Cost</div></div>
+          <div><div class="text-3xl font-bold accent" id="n">Low</div><div class="text-xs text-gray-400 mt-1">Noise</div></div>
+        </div>
+        <button onclick="addToOrder()" class="btn-primary w-full mt-6 py-4 rounded-xl text-lg">Add to Order</button>
+      </div>
     </div>
-  </section>
+  </div>
+</div>
 
-  <footer>
-    <p>&copy; 2026 SilentForge. Custom 3D-printed silent mini drones. Not a mass-market product — each build is unique. Check regulations before flying.</p>
-  </footer>
+<div id="page-about" class="page hidden py-16 px-6 max-w-4xl mx-auto">
+  <h2 class="text-4xl font-bold mb-6">About SilentForge</h2>
+  <div class="card p-8 space-y-4 text-gray-300">
+    <p>You design it. I source the real parts, 3D print the frame and custom pieces, assemble, and ship.</p>
+    <p>Payment via Venmo or ACH after you review the BOM. Typical lead time 7-14 days.</p>
+    <p class="text-sm text-gray-500">Custom hobby builds. User responsible for local regulations, FAA rules, and safe LiPo handling.</p>
+  </div>
+</div>
+
+<script>
+function showPage(p){document.querySelectorAll('.page').forEach(e=>e.classList.add('hidden'));document.getElementById('page-'+p).classList.remove('hidden');}
+function updateBuild(){
+  let w=20,c=0,wh=0;
+  ['frame','motors','battery','ai'].forEach(id=>{
+    const o=document.getElementById(id).options[document.getElementById(id).selectedIndex];
+    w+=+o.dataset.w||0; c+=+o.dataset.p||0; if(id==='battery') wh=+o.dataset.wh||0;
+  });
+  const hover=w/5.5; const mins=Math.round((wh*0.8/hover)*60*0.85);
+  document.getElementById('w').textContent=Math.round(w)+'g';
+  document.getElementById('t').textContent=mins+' min';
+  document.getElementById('c').textContent='$'+Math.round(c);
+  document.getElementById('n').textContent=document.getElementById('motors').value==='hm1202'?'Low':'Med';
+  const ai=document.getElementById('ai').value!=='none';
+  document.getElementById('aiBox').classList.toggle('hidden',!ai);
+  document.getElementById('aiTxt').classList.toggle('hidden',!ai);
+}
+function addToOrder(){alert('Order added! Checkout flow continues with Venmo/ACH in full version.');}
+updateBuild();
+</script>
 </body>
 </html>
