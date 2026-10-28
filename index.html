@@ -50,38 +50,58 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #0a0b0e; color: 
   <div class="grid lg:grid-cols-5 gap-8">
     <div class="lg:col-span-2 space-y-4">
       <div class="card p-5">
-        <label class="block text-sm font-medium mb-2 accent">Frame</label>
+        <label class="block text-sm font-medium mb-2 accent">Frame / Body</label>
         <select id="frame" onchange="updateBuild()" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3">
-          <option value="micro" data-w="35" data-p="22">3D Micro Silent PETG-CF — 35g</option>
-          <option value="whoop" data-w="28" data-p="18">Ducted Whoop — 28g</option>
-          <option value="tooth" data-w="32" data-p="20">Toothpick — 32g</option>
+          <option value="micro3d" data-w="32" data-base="25">3D Printed Micro PETG-CF (Whoop/Toothpick) — 32g — Open or Ducted</option>
+          <option value="whoopcf" data-w="28" data-base="22">Carbon Fiber Whoop Frame — 28g — Open</option>
+          <option value="toothcf" data-w="35" data-base="28">Carbon Fiber Toothpick — 35g</option>
+          <option value="enclosed3d" data-w="45" data-base="35">Enclosed 3D Printed Body (Custom) — 45g</option>
+          <option value="custom3d" data-w="40" data-base="30">Custom 3D Designed Body (Notes required) — ~40g</option>
+          <option value="alu" data-w="55" data-base="45">Aluminum CNC Micro Frame — 55g (Durable)</option>
         </select>
+        <p class="text-xs text-gray-500 mt-2">3D printed = fully custom shapes, colors, integrated ducts/mounts. CF = stiff & light. Alu = crash resistant.</p>
       </div>
       <div class="card p-5">
         <label class="block text-sm font-medium mb-2 accent">Motors + Quiet Props</label>
         <select id="motors" onchange="updateBuild()" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3">
-          <option value="hm1202" data-w="18" data-p="58" data-thrust="320">Happymodel 1202.5 + Quiet 3-blade — Low Noise</option>
-          <option value="1404" data-w="48" data-p="72" data-thrust="600">1404 Efficient — Medium Noise</option>
+          <option value="hm1202quiet" data-w="20" data-base="45" data-thrust="300">Happymodel EX1202.5 + Master Airscrew Stealth Quiet Props — Low Noise</option>
+          <option value="hm1202std" data-w="18" data-base="40" data-thrust="320">Happymodel EX1202.5 + Standard 3-blade — Medium Noise</option>
+          <option value="1404quiet" data-w="50" data-base="55" data-thrust="550">1404 Motors + Low-Pitch Quiet Props — Medium-Low Noise</option>
         </select>
+        <p class="text-xs text-gray-500 mt-2">Stealth props can reduce noise ~30-37%. Lower pitch / more blades = quieter.</p>
       </div>
       <div class="card p-5">
         <label class="block text-sm font-medium mb-2 accent">Battery</label>
         <select id="battery" onchange="updateBuild()" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3">
-          <option value="2s" data-w="26" data-p="19" data-wh="3.42">LAVA 2S 450mAh — 3.42Wh</option>
-          <option value="3s" data-w="38" data-p="24" data-wh="5.13">LAVA 3S 450mAh — 5.13Wh</option>
+          <option value="2s450" data-w="28" data-base="15" data-wh="3.33">2S 450mAh LiPo — 28g — 3.33Wh</option>
+          <option value="3s450" data-w="40" data-base="18" data-wh="5.0">3S 450mAh LiPo — 40g — 5.0Wh</option>
+          <option value="2s300" data-w="22" data-base="12" data-wh="2.22">2S 300mAh (Lighter) — 22g</option>
         </select>
+      </div>
+      <div class="card p-5">
+        <label class="block text-sm font-medium mb-2 accent">Sensors / Camera</label>
+        <select id="sensors" onchange="updateBuild()" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3">
+          <option value="none" data-w="0" data-base="0">None</option>
+          <option value="analognano" data-w="3" data-base="25">Analog Nano FPV Cam (Caddx Ant Lite) — 3g — Basic</option>
+          <option value="digitalmini" data-w="18" data-base="140">Digital Mini (DJI O4 Lite or Walksnail) — 18g — HD</option>
+          <option value="lidarmini" data-w="12" data-base="55">TFmini Plus LiDAR Rangefinder — 12g — Obstacle/Height</option>
+          <option value="camlidar" data-w="20" data-base="70">HD Cam + Mini LiDAR Combo</option>
+        </select>
+        <p class="text-xs text-gray-500 mt-2">Mini LiDAR great for altitude hold. Full survey LiDAR (900g+) not suitable for mini silent builds.</p>
       </div>
       <div class="card p-5">
         <label class="block text-sm font-medium mb-2 accent">AI Module</label>
         <select id="ai" onchange="updateBuild()" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3">
-          <option value="none" data-w="0" data-p="0" data-power="0">None</option>
-          <option value="voxl" data-w="22" data-p="1250" data-power="5">VOXL 2 Mini — 15 TOPS</option>
-          <option value="orin" data-w="160" data-p="290" data-power="12">Jetson Orin Nano — 67 TOPS</option>
+          <option value="none" data-w="0" data-base="0" data-power="0">None</option>
+          <option value="pi5" data-w="65" data-base="90" data-power="6">Raspberry Pi 5 + Cooling — ~65g — Budget, Non-Real-Time AI</option>
+          <option value="orin" data-w="180" data-base="220" data-power="12">Jetson Orin Nano Super — ~180g — Real-Time 67 TOPS (Expensive)</option>
+          <option value="coral" data-w="15" data-base="40" data-power="2">Google Coral USB — 15g — Efficient Edge AI</option>
         </select>
+        <p class="text-xs text-gray-500 mt-2">Jetson for true real-time object detection/follow. Pi for lighter tasks or prototyping. Notes for custom models.</p>
       </div>
       <div class="card p-5">
         <label class="block text-sm font-medium mb-2 accent">Custom Notes / 3D Requests</label>
-        <textarea id="notes" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3 h-24" placeholder="Custom mounts, AI models, colors, anything..."></textarea>
+        <textarea id="notes" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3 h-24" placeholder="Custom body design, specific AI models, colors, mounts, anything..."></textarea>
       </div>
     </div>
     <div class="lg:col-span-3">
@@ -113,12 +133,13 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #0a0b0e; color: 
       </div>
       <div class="card p-6">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          <div><div class="text-3xl font-bold accent" id="w">0g</div><div class="text-xs text-gray-400 mt-1">Weight</div></div>
-          <div><div class="text-3xl font-bold accent" id="t">0 min</div><div class="text-xs text-gray-400 mt-1">Flight Time</div></div>
-          <div><div class="text-3xl font-bold accent" id="c">$0</div><div class="text-xs text-gray-400 mt-1">Est. Cost</div></div>
-          <div><div class="text-3xl font-bold accent" id="n">Low</div><div class="text-xs text-gray-400 mt-1">Noise</div></div>
+          <div><div class="text-3xl font-bold accent" id="w">0g</div><div class="text-xs text-gray-400 mt-1">All-Up Weight</div></div>
+          <div><div class="text-3xl font-bold accent" id="t">0 min</div><div class="text-xs text-gray-400 mt-1">Est. Flight Time</div></div>
+          <div><div class="text-3xl font-bold accent" id="c">$0</div><div class="text-xs text-gray-400 mt-1">Est. Cost (+30%)</div></div>
+          <div><div class="text-3xl font-bold accent" id="n">Low</div><div class="text-xs text-gray-400 mt-1">Noise Level</div></div>
         </div>
         <button onclick="addToOrder()" class="btn-primary w-full mt-6 py-4 rounded-xl text-lg">Add to Order</button>
+        <p class="text-xs text-gray-500 mt-3 text-center">Cost includes ~30% upcharge for sourcing, printing, assembly & profit. Final quote after review.</p>
       </div>
     </div>
   </div>
@@ -136,21 +157,33 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #0a0b0e; color: 
 <script>
 function showPage(p){document.querySelectorAll('.page').forEach(e=>e.classList.add('hidden'));document.getElementById('page-'+p).classList.remove('hidden');}
 function updateBuild(){
-  let w=20,c=0,wh=0;
-  ['frame','motors','battery','ai'].forEach(id=>{
-    const o=document.getElementById(id).options[document.getElementById(id).selectedIndex];
-    w+=+o.dataset.w||0; c+=+o.dataset.p||0; if(id==='battery') wh=+o.dataset.wh||0;
+  let w=25, baseCost=0, wh=0, powerExtra=0;
+  const ids = ['frame','motors','battery','sensors','ai'];
+  ids.forEach(id => {
+    const sel = document.getElementById(id);
+    const o = sel.options[sel.selectedIndex];
+    w += +(o.dataset.w || 0);
+    baseCost += +(o.dataset.base || 0);
+    if (id === 'battery') wh = +(o.dataset.wh || 0);
+    if (id === 'ai') powerExtra += +(o.dataset.power || 0);
   });
-  const hover=w/5.5; const mins=Math.round((wh*0.8/hover)*60*0.85);
-  document.getElementById('w').textContent=Math.round(w)+'g';
-  document.getElementById('t').textContent=mins+' min';
-  document.getElementById('c').textContent='$'+Math.round(c);
-  document.getElementById('n').textContent=document.getElementById('motors').value==='hm1202'?'Low':'Med';
-  const ai=document.getElementById('ai').value!=='none';
-  document.getElementById('aiBox').classList.toggle('hidden',!ai);
-  document.getElementById('aiTxt').classList.toggle('hidden',!ai);
+  const markup = 1.30;
+  const totalCost = Math.round(baseCost * markup);
+  // Rough flight time: assume ~4-6W hover base + powerExtra, efficiency factor
+  const hoverW = 5 + powerExtra * 0.7;
+  const mins = wh > 0 ? Math.round((wh * 0.75 / hoverW) * 60) : 0;
+  document.getElementById('w').textContent = Math.round(w) + 'g';
+  document.getElementById('t').textContent = (mins || 0) + ' min';
+  document.getElementById('c').textContent = '$' + totalCost;
+  const motorVal = document.getElementById('motors').value;
+  document.getElementById('n').textContent = motorVal.includes('quiet') ? 'Low' : (motorVal.includes('1404') ? 'Med' : 'Med-Low');
+  const aiOn = document.getElementById('ai').value !== 'none';
+  document.getElementById('aiBox').classList.toggle('hidden', !aiOn);
+  document.getElementById('aiTxt').classList.toggle('hidden', !aiOn);
+  const camOn = document.getElementById('sensors').value !== 'none';
+  document.getElementById('cam').classList.toggle('hidden', !camOn);
 }
-function addToOrder(){alert('Order added! Checkout flow continues with Venmo/ACH in full version.');}
+function addToOrder(){alert('Build added! Review notes + BOM, then checkout with Venmo/ACH.');}
 updateBuild();
 </script>
 </body>
