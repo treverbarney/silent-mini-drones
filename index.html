@@ -26,7 +26,7 @@ select, textarea { background: #0a0b0e; border: 1px solid #333; color: white; }
 
 <div class="max-w-7xl mx-auto px-6 py-10">
   <h1 class="text-4xl md:text-5xl font-bold mb-2">Build Your Silent Mini Drone</h1>
-  <p class="text-gray-400 mb-10 max-w-3xl">Select real-market options. Weight, flight time, and cost (with markup) update live. Custom 3D bodies available. Advice included.</p>
+  <p class="text-gray-400 mb-10 max-w-3xl">Select real-market options. Weight, flight time (physics-based), and cost (with markup) update live. Diagram updates with your choices. Custom 3D bodies available.</p>
 
   <div class="grid lg:grid-cols-12 gap-8">
     <!-- Options -->
@@ -35,11 +35,11 @@ select, textarea { background: #0a0b0e; border: 1px solid #333; color: white; }
       <div class="card p-6">
         <h3 class="accent text-lg font-semibold mb-3">Frame / Body</h3>
         <select id="frame" onchange="update()" class="w-full p-3 rounded-lg">
-          <option value="micro_3d" data-w="32" data-base="45" data-advice="Ultralight 3D PETG-CF. Best for silent micro. Custom print available.">Micro 3D PETG-CF Open — 32g — Custom printable</option>
-          <option value="whoop_ducted" data-w="38" data-base="55" data-advice="Ducted for prop protection + slightly quieter.">Ducted Whoop 3D — 38g</option>
-          <option value="tooth_cf" data-w="45" data-base="70" data-advice="Stiff carbon fiber toothpick style.">Toothpick Carbon Fiber — 45g</option>
-          <option value="enclosed_3d" data-w="48" data-base="80" data-advice="Enclosed body for weather/protection. Custom design.">Enclosed 3D Body — 48g — Custom</option>
-          <option value="custom_3d" data-w="40" data-base="120" data-advice="Fully custom designed and 3D printed body. Describe in notes.">Fully Custom 3D Print Body — quote based</option>
+          <option value="micro_3d" data-w="32" data-base="45" data-advice="Ultralight 3D PETG-CF. Best for silent micro. Custom print available." data-style="open">Micro 3D PETG-CF Open — 32g — Custom printable</option>
+          <option value="whoop_ducted" data-w="38" data-base="55" data-advice="Ducted for prop protection + slightly quieter." data-style="ducted">Ducted Whoop 3D — 38g</option>
+          <option value="tooth_cf" data-w="45" data-base="70" data-advice="Stiff carbon fiber toothpick style." data-style="open">Toothpick Carbon Fiber — 45g</option>
+          <option value="enclosed_3d" data-w="48" data-base="80" data-advice="Enclosed body for weather/protection. Custom design." data-style="enclosed">Enclosed 3D Body — 48g — Custom</option>
+          <option value="custom_3d" data-w="40" data-base="120" data-advice="Fully custom designed and 3D printed body. Describe in notes." data-style="custom">Fully Custom 3D Print Body — quote based</option>
         </select>
         <p class="text-xs text-gray-500 mt-2" id="frameAdvice"></p>
       </div>
@@ -100,12 +100,30 @@ select, textarea { background: #0a0b0e; border: 1px solid #333; color: white; }
     <!-- Live Preview + Stats -->
     <div class="lg:col-span-5 space-y-6">
       <div class="card p-6">
-        <h3 class="accent mb-4 text-lg font-semibold">Live Build</h3>
-        <div class="bg-black/40 rounded-xl p-4 flex justify-center items-center h-48">
-          <div class="text-center">
-            <div class="text-6xl mb-2">🚁</div>
-            <p class="text-sm text-gray-400">Diagram updates with selections<br>(AI board, sensors, body type)</p>
-          </div>
+        <h3 class="accent mb-4 text-lg font-semibold">Live Build Diagram</h3>
+        <div class="bg-black/40 rounded-xl p-4 flex justify-center">
+          <svg id="droneSvg" viewBox="0 0 500 350" class="w-full max-w-lg h-64">
+            <defs><linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2a2e35"/><stop offset="100%" stop-color="#1a1d24"/></linearGradient></defs>
+            <rect id="body" x="190" y="140" width="120" height="70" rx="16" fill="url(#bodyGrad)" stroke="#7dd3c0" stroke-width="2"/>
+            <line id="arm1" x1="250" y1="175" x2="80" y2="60" stroke="#a0aec0" stroke-width="6" stroke-linecap="round"/>
+            <line id="arm2" x1="250" y1="175" x2="420" y2="60" stroke="#a0aec0" stroke-width="6" stroke-linecap="round"/>
+            <line id="arm3" x1="250" y1="175" x2="80" y2="290" stroke="#a0aec0" stroke-width="6" stroke-linecap="round"/>
+            <line id="arm4" x1="250" y1="175" x2="420" y2="290" stroke="#a0aec0" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="70" cy="50" r="18" fill="#7dd3c0"/>
+            <circle cx="430" cy="50" r="18" fill="#7dd3c0"/>
+            <circle cx="70" cy="300" r="18" fill="#7dd3c0"/>
+            <circle cx="430" cy="300" r="18" fill="#7dd3c0"/>
+            <g id="props">
+              <ellipse cx="70" cy="50" rx="32" ry="8" fill="#ff6b6b" transform="rotate(35 70 50)"/>
+              <ellipse cx="430" cy="50" rx="32" ry="8" fill="#ff6b6b" transform="rotate(-35 430 50)"/>
+              <ellipse cx="70" cy="300" rx="32" ry="8" fill="#ff6b6b" transform="rotate(-35 70 300)"/>
+              <ellipse cx="430" cy="300" rx="32" ry="8" fill="#ff6b6b" transform="rotate(35 430 300)"/>
+            </g>
+            <rect id="cam" x="210" y="120" width="80" height="28" rx="6" fill="#c5cdd8" opacity="0"/>
+            <rect id="aiBox" x="205" y="185" width="90" height="30" rx="6" fill="#4a90d9" opacity="0"/>
+            <text id="aiTxt" x="250" y="205" text-anchor="middle" fill="white" font-size="12" opacity="0">AI</text>
+            <text id="styleTxt" x="250" y="330" text-anchor="middle" fill="#7dd3c0" font-size="14">Open Frame</text>
+          </svg>
         </div>
       </div>
 
@@ -128,13 +146,13 @@ select, textarea { background: #0a0b0e; border: 1px solid #333; color: white; }
             <div class="text-xs text-gray-400">Noise Level</div>
           </div>
         </div>
-        <p class="text-xs text-gray-500 mt-4 text-center">Cost includes ~30% upcharge for sourcing, printing, assembly & profit. Final quote confirmed before payment.</p>
+        <p class="text-xs text-gray-500 mt-4 text-center">Cost includes ~30% upcharge for sourcing, printing, assembly & profit. Final quote confirmed before payment. Flight time uses hover power estimate based on weight + efficiency.</p>
         <button onclick="checkout()" class="btn-primary w-full mt-6 py-4 rounded-xl text-lg">Proceed to Checkout</button>
       </div>
 
       <div class="card p-6 text-sm text-gray-400">
-        <p><strong class="text-white">How it works:</strong> Configure → Review live weight & cost → Checkout → Pay via Venmo or ACH. I order real parts, 3D print your body, assemble, and ship.</p>
-        <p class="mt-2 text-xs">Estimates based on real component data. Actual flight time varies with flying style and conditions.</p>
+        <p><strong class="text-white">How it works:</strong> Configure → Review live weight, flight time & cost → Checkout → Pay via Venmo or ACH. I order real parts, 3D print your body, assemble, and ship.</p>
+        <p class="mt-2 text-xs">Estimates based on real component data and simplified physics. Actual flight time varies with flying style and conditions.</p>
       </div>
     </div>
   </div>
@@ -149,6 +167,7 @@ function update() {
   let wh = 0;
   let powerExtra = 0;
   let noise = 'Low';
+  let style = 'open';
 
   const ids = ['frame','props','battery','sensors','ai'];
   ids.forEach(id => {
@@ -159,16 +178,17 @@ function update() {
     if (id === 'battery') wh = parseFloat(opt.dataset.wh) || 0;
     if (id === 'ai') powerExtra = parseFloat(opt.dataset.power) || 0;
     if (id === 'props') noise = opt.dataset.noise === 'low' ? 'Low' : 'Medium';
+    if (id === 'frame') style = opt.dataset.style || 'open';
 
     // Show advice
     const adviceEl = document.getElementById(id + 'Advice');
     if (adviceEl && opt.dataset.advice) adviceEl.textContent = opt.dataset.advice;
   });
 
-  // Flight time estimate (simplified, realistic for mini)
-  const hoverPower = (w / 8) + powerExtra; // rough watts for hover
+  // Physics-based flight time: hover power ≈ AUW(g) * 0.18 W/g (typical mini efficiency) + extras
+  const hoverW = (w * 0.18) + powerExtra;
   const usableWh = wh * 0.8;
-  const minutes = hoverPower > 0 ? Math.round((usableWh / hoverPower) * 60 * 0.75) : 0;
+  const minutes = hoverW > 0 ? Math.round((usableWh / hoverW) * 60) : 0;
 
   const totalCost = Math.round(baseCost * MARKUP);
 
@@ -176,11 +196,31 @@ function update() {
   document.getElementById('time').textContent = minutes + ' min';
   document.getElementById('cost').textContent = '$' + totalCost;
   document.getElementById('noise').textContent = noise;
+
+  // Update diagram
+  const cam = document.getElementById('cam');
+  const aiBox = document.getElementById('aiBox');
+  const aiTxt = document.getElementById('aiTxt');
+  const styleTxt = document.getElementById('styleTxt');
+  const body = document.getElementById('body');
+
+  cam.setAttribute('opacity', document.getElementById('sensors').value !== 'none' ? '1' : '0');
+  aiBox.setAttribute('opacity', document.getElementById('ai').value !== 'none' ? '1' : '0');
+  aiTxt.setAttribute('opacity', document.getElementById('ai').value !== 'none' ? '1' : '0');
+
+  styleTxt.textContent = style === 'ducted' ? 'Ducted Frame' : style === 'enclosed' ? 'Enclosed Body' : style === 'custom' ? 'Custom Body' : 'Open Frame';
+  if (style === 'enclosed' || style === 'custom') {
+    body.setAttribute('rx', '8');
+    body.setAttribute('stroke', '#88a494');
+  } else {
+    body.setAttribute('rx', '16');
+    body.setAttribute('stroke', '#7dd3c0');
+  }
 }
 
 function checkout() {
   const notes = document.getElementById('notes').value;
-  alert('Configuration saved!\n\nWeight: ' + document.getElementById('weight').textContent + '\nCost: ' + document.getElementById('cost').textContent + '\n\nNext: Venmo or ACH payment instructions will be provided. Custom notes: ' + (notes || 'None'));
+  alert('Configuration saved!\n\nWeight: ' + document.getElementById('weight').textContent + '\nFlight Time: ' + document.getElementById('time').textContent + '\nCost: ' + document.getElementById('cost').textContent + '\n\nNext: Venmo or ACH payment instructions will be provided. Custom notes: ' + (notes || 'None'));
 }
 
 update();
