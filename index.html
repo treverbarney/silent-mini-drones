@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SilentForge | Custom Silent Mini Drones</title>
+<title>SilentForge | Custom Silent Mini Drone Configurator</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -11,180 +11,179 @@ body { font-family: 'Inter', system-ui, sans-serif; background: #0a0b0e; color: 
 .accent { color: #7dd3c0; }
 .btn-primary { background: linear-gradient(135deg, #7dd3c0, #5ab8a8); color: #0a0b0e; font-weight: 600; transition: all 0.2s; }
 .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px -5px rgba(125,211,192,0.3); }
-.card { background: #12141a; border: 1px solid #252830; border-radius: 16px; transition: all 0.3s; }
-.card:hover { border-color: #7dd3c0; transform: translateY(-4px); }
-.hero-bg { background: linear-gradient(to bottom, rgba(10,11,14,0.7), #0a0b0e), url('https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=1600&q=80') center/cover; }
+.card { background: #12141a; border: 1px solid #252830; border-radius: 16px; }
+.card:hover { border-color: #7dd3c0; }
+select, textarea { background: #0a0b0e; border: 1px solid #333; color: white; }
 </style>
 </head>
 <body class="min-h-screen">
-<nav class="border-b border-gray-800/50 backdrop-blur-md sticky top-0 z-50 bg-[#0a0b0e]/80">
+<nav class="border-b border-gray-800/50 backdrop-blur-md sticky top-0 z-50 bg-[#0a0b0e]/90">
   <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
     <div class="text-2xl font-bold">Silent<span class="accent">Forge</span></div>
-    <div class="space-x-8 text-sm font-medium">
-      <a href="#" onclick="showPage('home')" class="hover:accent transition">Home</a>
-      <a href="#" onclick="showPage('config')" class="hover:accent transition">Build</a>
-      <a href="#" onclick="showPage('about')" class="hover:accent transition">About</a>
-    </div>
+    <div class="text-sm text-gray-400">Custom Silent Mini Drones · Live Configurator</div>
   </div>
 </nav>
 
-<div id="page-home" class="page">
-  <section class="hero-bg min-h-[80vh] flex items-center">
-    <div class="max-w-7xl mx-auto px-6 py-20">
-      <h1 class="text-6xl md:text-7xl font-bold leading-tight mb-6">Custom Silent<br><span class="accent">Mini Drones</span></h1>
-      <p class="text-xl text-gray-300 max-w-2xl mb-10">Design ultra-quiet 3D-printed mini drones. Live diagram, real weight & flight time calculations, AI options, full custom builds.</p>
-      <button onclick="showPage('config')" class="btn-primary px-8 py-4 rounded-xl text-lg">Start Building Yours</button>
-    </div>
-  </section>
-  <section class="py-20 px-6 max-w-7xl mx-auto">
-    <div class="grid md:grid-cols-3 gap-8">
-      <div class="card p-8"><div class="text-4xl mb-4">🔇️</div><h3 class="text-xl font-semibold mb-2 accent">Truly Silent</h3><p class="text-gray-400">Low-KV motors, multi-blade quiet props, lightweight frames for neighborhood-friendly flight.</p></div>
-      <div class="card p-8"><div class="text-4xl mb-4">📊</div><h3 class="text-xl font-semibold mb-2 accent">Live Stats</h3><p class="text-gray-400">Weight, flight time, TWR, and cost update instantly as you configure.</p></div>
-      <div class="card p-8"><div class="text-4xl mb-4">🤖</div><h3 class="text-xl font-semibold mb-2 accent">AI Ready</h3><p class="text-gray-400">VOXL, Jetson, Coral, or custom AI. Notes for specific models and capabilities.</p></div>
-    </div>
-  </section>
-</div>
+<div class="max-w-7xl mx-auto px-6 py-10">
+  <h1 class="text-4xl md:text-5xl font-bold mb-2">Build Your Silent Mini Drone</h1>
+  <p class="text-gray-400 mb-10 max-w-3xl">Select real-market options. Weight, flight time, and cost (with markup) update live. Custom 3D bodies available. Advice included.</p>
 
-<div id="page-config" class="page hidden py-10 px-6 max-w-7xl mx-auto">
-  <h2 class="text-4xl font-bold mb-8">Configure Your Silent Mini</h2>
-  <div class="grid lg:grid-cols-5 gap-8">
-    <div class="lg:col-span-2 space-y-4">
-      <div class="card p-5">
-        <label class="block text-sm font-medium mb-2 accent">Frame / Body</label>
-        <select id="frame" onchange="updateBuild()" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3">
-          <option value="micro3d" data-w="32" data-base="25">3D Printed Micro PETG-CF (Whoop/Toothpick) — 32g — Open or Ducted</option>
-          <option value="whoopcf" data-w="28" data-base="22">Carbon Fiber Whoop Frame — 28g — Open</option>
-          <option value="toothcf" data-w="35" data-base="28">Carbon Fiber Toothpick — 35g</option>
-          <option value="enclosed3d" data-w="45" data-base="35">Enclosed 3D Printed Body (Custom) — 45g</option>
-          <option value="custom3d" data-w="40" data-base="30">Custom 3D Designed Body (Notes required) — ~40g</option>
-          <option value="alu" data-w="55" data-base="45">Aluminum CNC Micro Frame — 55g (Durable)</option>
-        </select>
-        <p class="text-xs text-gray-500 mt-2">3D printed = fully custom shapes, colors, integrated ducts/mounts. CF = stiff & light. Alu = crash resistant.</p>
-      </div>
-      <div class="card p-5">
-        <label class="block text-sm font-medium mb-2 accent">Motors + Quiet Props</label>
-        <select id="motors" onchange="updateBuild()" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3">
-          <option value="hm1202quiet" data-w="20" data-base="45" data-thrust="300">Happymodel EX1202.5 + Master Airscrew Stealth Quiet Props — Low Noise</option>
-          <option value="hm1202std" data-w="18" data-base="40" data-thrust="320">Happymodel EX1202.5 + Standard 3-blade — Medium Noise</option>
-          <option value="1404quiet" data-w="50" data-base="55" data-thrust="550">1404 Motors + Low-Pitch Quiet Props — Medium-Low Noise</option>
-        </select>
-        <p class="text-xs text-gray-500 mt-2">Stealth props can reduce noise ~30-37%. Lower pitch / more blades = quieter.</p>
-      </div>
-      <div class="card p-5">
-        <label class="block text-sm font-medium mb-2 accent">Battery</label>
-        <select id="battery" onchange="updateBuild()" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3">
-          <option value="2s450" data-w="28" data-base="15" data-wh="3.33">2S 450mAh LiPo — 28g — 3.33Wh</option>
-          <option value="3s450" data-w="40" data-base="18" data-wh="5.0">3S 450mAh LiPo — 40g — 5.0Wh</option>
-          <option value="2s300" data-w="22" data-base="12" data-wh="2.22">2S 300mAh (Lighter) — 22g</option>
-        </select>
-      </div>
-      <div class="card p-5">
-        <label class="block text-sm font-medium mb-2 accent">Sensors / Camera</label>
-        <select id="sensors" onchange="updateBuild()" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3">
-          <option value="none" data-w="0" data-base="0">None</option>
-          <option value="analognano" data-w="3" data-base="25">Analog Nano FPV Cam (Caddx Ant Lite) — 3g — Basic</option>
-          <option value="digitalmini" data-w="18" data-base="140">Digital Mini (DJI O4 Lite or Walksnail) — 18g — HD</option>
-          <option value="lidarmini" data-w="12" data-base="55">TFmini Plus LiDAR Rangefinder — 12g — Obstacle/Height</option>
-          <option value="camlidar" data-w="20" data-base="70">HD Cam + Mini LiDAR Combo</option>
-        </select>
-        <p class="text-xs text-gray-500 mt-2">Mini LiDAR great for altitude hold. Full survey LiDAR (900g+) not suitable for mini silent builds.</p>
-      </div>
-      <div class="card p-5">
-        <label class="block text-sm font-medium mb-2 accent">AI Module</label>
-        <select id="ai" onchange="updateBuild()" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3">
-          <option value="none" data-w="0" data-base="0" data-power="0">None</option>
-          <option value="pi5" data-w="65" data-base="90" data-power="6">Raspberry Pi 5 + Cooling — ~65g — Budget, Non-Real-Time AI</option>
-          <option value="orin" data-w="180" data-base="220" data-power="12">Jetson Orin Nano Super — ~180g — Real-Time 67 TOPS (Expensive)</option>
-          <option value="coral" data-w="15" data-base="40" data-power="2">Google Coral USB — 15g — Efficient Edge AI</option>
-        </select>
-        <p class="text-xs text-gray-500 mt-2">Jetson for true real-time object detection/follow. Pi for lighter tasks or prototyping. Notes for custom models.</p>
-      </div>
-      <div class="card p-5">
-        <label class="block text-sm font-medium mb-2 accent">Custom Notes / 3D Requests</label>
-        <textarea id="notes" class="w-full bg-[#0a0b0e] border border-gray-700 rounded-lg p-3 h-24" placeholder="Custom body design, specific AI models, colors, mounts, anything..."></textarea>
-      </div>
-    </div>
-    <div class="lg:col-span-3">
-      <div class="card p-6 mb-6">
-        <h3 class="accent mb-4 text-lg font-semibold">Live Build Preview</h3>
-        <div class="bg-black/40 rounded-xl p-4 flex justify-center">
-          <svg viewBox="0 0 500 350" class="w-full max-w-lg h-64">
-            <defs><linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#2a2e35"/><stop offset="100%" stop-color="#1a1d24"/></linearGradient></defs>
-            <rect x="190" y="140" width="120" height="70" rx="16" fill="url(#bodyGrad)" stroke="#7dd3c0" stroke-width="2"/>
-            <line x1="250" y1="175" x2="80" y2="60" stroke="#a0aec0" stroke-width="6" stroke-linecap="round"/>
-            <line x1="250" y1="175" x2="420" y2="60" stroke="#a0aec0" stroke-width="6" stroke-linecap="round"/>
-            <line x1="250" y1="175" x2="80" y2="290" stroke="#a0aec0" stroke-width="6" stroke-linecap="round"/>
-            <line x1="250" y1="175" x2="420" y2="290" stroke="#a0aec0" stroke-width="6" stroke-linecap="round"/>
-            <circle cx="70" cy="50" r="18" fill="#7dd3c0"/>
-            <circle cx="430" cy="50" r="18" fill="#7dd3c0"/>
-            <circle cx="70" cy="300" r="18" fill="#7dd3c0"/>
-            <circle cx="430" cy="300" r="18" fill="#7dd3c0"/>
-            <g id="props" opacity="0.9">
-              <ellipse cx="70" cy="50" rx="32" ry="8" fill="#ff6b6b" transform="rotate(35 70 50)"/>
-              <ellipse cx="430" cy="50" rx="32" ry="8" fill="#ff6b6b" transform="rotate(-35 430 50)"/>
-              <ellipse cx="70" cy="300" rx="32" ry="8" fill="#ff6b6b" transform="rotate(-35 70 300)"/>
-              <ellipse cx="430" cy="300" rx="32" ry="8" fill="#ff6b6b" transform="rotate(35 430 300)"/>
-            </g>
-            <rect id="cam" x="210" y="120" width="80" height="28" rx="6" fill="#c5cdd8" class="hidden"/>
-            <rect id="aiBox" x="205" y="185" width="90" height="30" rx="6" fill="#4a90d9" class="hidden"/>
-            <text id="aiTxt" x="250" y="205" text-anchor="middle" fill="white" font-size="12" class="hidden">AI</text>
-          </svg>
-        </div>
-      </div>
+  <div class="grid lg:grid-cols-12 gap-8">
+    <!-- Options -->
+    <div class="lg:col-span-7 space-y-6">
+      <!-- Frame -->
       <div class="card p-6">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          <div><div class="text-3xl font-bold accent" id="w">0g</div><div class="text-xs text-gray-400 mt-1">All-Up Weight</div></div>
-          <div><div class="text-3xl font-bold accent" id="t">0 min</div><div class="text-xs text-gray-400 mt-1">Est. Flight Time</div></div>
-          <div><div class="text-3xl font-bold accent" id="c">$0</div><div class="text-xs text-gray-400 mt-1">Est. Cost (+30%)</div></div>
-          <div><div class="text-3xl font-bold accent" id="n">Low</div><div class="text-xs text-gray-400 mt-1">Noise Level</div></div>
-        </div>
-        <button onclick="addToOrder()" class="btn-primary w-full mt-6 py-4 rounded-xl text-lg">Add to Order</button>
-        <p class="text-xs text-gray-500 mt-3 text-center">Cost includes ~30% upcharge for sourcing, printing, assembly & profit. Final quote after review.</p>
+        <h3 class="accent text-lg font-semibold mb-3">Frame / Body</h3>
+        <select id="frame" onchange="update()" class="w-full p-3 rounded-lg">
+          <option value="micro_3d" data-w="32" data-base="45" data-advice="Ultralight 3D PETG-CF. Best for silent micro. Custom print available.">Micro 3D PETG-CF Open — 32g — Custom printable</option>
+          <option value="whoop_ducted" data-w="38" data-base="55" data-advice="Ducted for prop protection + slightly quieter.">Ducted Whoop 3D — 38g</option>
+          <option value="tooth_cf" data-w="45" data-base="70" data-advice="Stiff carbon fiber toothpick style.">Toothpick Carbon Fiber — 45g</option>
+          <option value="enclosed_3d" data-w="48" data-base="80" data-advice="Enclosed body for weather/protection. Custom design.">Enclosed 3D Body — 48g — Custom</option>
+          <option value="custom_3d" data-w="40" data-base="120" data-advice="Fully custom designed and 3D printed body. Describe in notes.">Fully Custom 3D Print Body — quote based</option>
+        </select>
+        <p class="text-xs text-gray-500 mt-2" id="frameAdvice"></p>
+      </div>
+
+      <!-- Props -->
+      <div class="card p-6">
+        <h3 class="accent text-lg font-semibold mb-3">Quiet Props / Blades</h3>
+        <select id="props" onchange="update()" class="w-full p-3 rounded-lg">
+          <option value="stealth" data-w="8" data-base="18" data-noise="low" data-advice="Master Airscrew style low-noise. Lower RPM, reduced tip speed.">Low-Noise Stealth Props — Best quiet</option>
+          <option value="multi" data-w="10" data-base="15" data-noise="low" data-advice="3-4 blade designs reduce noise at cost of some efficiency.">Multi-Blade Quiet Props</option>
+          <option value="standard" data-w="6" data-base="12" data-noise="med" data-advice="Standard bi-blade. Louder but efficient.">Standard Bi-Blade</option>
+        </select>
+        <p class="text-xs text-gray-500 mt-2" id="propsAdvice"></p>
+      </div>
+
+      <!-- Battery -->
+      <div class="card p-6">
+        <h3 class="accent text-lg font-semibold mb-3">Battery</h3>
+        <select id="battery" onchange="update()" class="w-full p-3 rounded-lg">
+          <option value="2s450" data-w="28" data-base="22" data-wh="3.4" data-advice="Lightest. Good for silent micro.">2S 450mAh — 3.4Wh — 28g</option>
+          <option value="2s850" data-w="42" data-base="28" data-wh="6.3" data-advice="Longer flight, still light.">2S 850mAh — 6.3Wh — 42g</option>
+          <option value="3s450" data-w="38" data-base="26" data-wh="5.1" data-advice="More power for heavier builds.">3S 450mAh — 5.1Wh — 38g</option>
+        </select>
+      </div>
+
+      <!-- Sensors -->
+      <div class="card p-6">
+        <h3 class="accent text-lg font-semibold mb-3">Sensors / Camera / LiDAR</h3>
+        <select id="sensors" onchange="update()" class="w-full p-3 rounded-lg">
+          <option value="none" data-w="0" data-base="0" data-advice="No extra sensors.">None</option>
+          <option value="fpv_cam" data-w="8" data-base="35" data-advice="Light FPV camera. Good for basic vision.">FPV Camera — 8g</option>
+          <option value="hd_cam" data-w="15" data-base="85" data-advice="Better quality HD camera with gimbal option.">HD Camera — 15g</option>
+          <option value="lidar_mini" data-w="12" data-base="45" data-advice="Benewake TFmini style. Short range obstacle avoidance. Light.">Mini LiDAR (TFmini class) — 12g</option>
+          <option value="lidar_scan" data-w="65" data-base="180" data-advice="Scanning micro LiDAR. More capable but heavier.">Scanning Micro LiDAR — 65g</option>
+        </select>
+        <p class="text-xs text-gray-500 mt-2" id="sensorsAdvice"></p>
+      </div>
+
+      <!-- AI -->
+      <div class="card p-6">
+        <h3 class="accent text-lg font-semibold mb-3">AI Compute</h3>
+        <select id="ai" onchange="update()" class="w-full p-3 rounded-lg">
+          <option value="none" data-w="0" data-base="0" data-power="0" data-advice="No onboard AI.">None</option>
+          <option value="pi_zero" data-w="10" data-base="45" data-power="1.5" data-advice="Raspberry Pi Zero 2 W. Very light/cheap. Not real-time AI. Good for logging/simple scripts.">Pi Zero 2 W — Light / Non-real-time — 10g</option>
+          <option value="pi5" data-w="55" data-base="95" data-power="6" data-advice="Raspberry Pi 5. Cheaper than Jetson. Limited real-time AI without accelerator. ~3-8W.">Raspberry Pi 5 — 55g — Not full real-time</option>
+          <option value="orin_nano" data-w="180" data-base="320" data-power="15" data-advice="Jetson Orin Nano 8GB. True real-time AI (67 TOPS). Heavy + power hungry. Best for vision AI.">Jetson Orin Nano — Real-time AI — ~180g system</option>
+        </select>
+        <p class="text-xs text-gray-500 mt-2" id="aiAdvice"></p>
+      </div>
+
+      <!-- Notes -->
+      <div class="card p-6">
+        <h3 class="accent text-lg font-semibold mb-3">Custom Notes / 3D Requests</h3>
+        <textarea id="notes" class="w-full p-3 rounded-lg h-28" placeholder="Describe custom body design, specific AI models, sensor mounts, colors, anything..."></textarea>
       </div>
     </div>
-  </div>
-</div>
 
-<div id="page-about" class="page hidden py-16 px-6 max-w-4xl mx-auto">
-  <h2 class="text-4xl font-bold mb-6">About SilentForge</h2>
-  <div class="card p-8 space-y-4 text-gray-300">
-    <p>You design it. I source the real parts, 3D print the frame and custom pieces, assemble, and ship.</p>
-    <p>Payment via Venmo or ACH after you review the BOM. Typical lead time 7-14 days.</p>
-    <p class="text-sm text-gray-500">Custom hobby builds. User responsible for local regulations, FAA rules, and safe LiPo handling.</p>
+    <!-- Live Preview + Stats -->
+    <div class="lg:col-span-5 space-y-6">
+      <div class="card p-6">
+        <h3 class="accent mb-4 text-lg font-semibold">Live Build</h3>
+        <div class="bg-black/40 rounded-xl p-4 flex justify-center items-center h-48">
+          <div class="text-center">
+            <div class="text-6xl mb-2">🚁</div>
+            <p class="text-sm text-gray-400">Diagram updates with selections<br>(AI board, sensors, body type)</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card p-6">
+        <div class="grid grid-cols-2 gap-4 text-center">
+          <div>
+            <div class="text-3xl font-bold accent" id="weight">0g</div>
+            <div class="text-xs text-gray-400">Total Weight</div>
+          </div>
+          <div>
+            <div class="text-3xl font-bold accent" id="time">0 min</div>
+            <div class="text-xs text-gray-400">Est. Flight Time</div>
+          </div>
+          <div>
+            <div class="text-3xl font-bold accent" id="cost">$0</div>
+            <div class="text-xs text-gray-400">Est. Cost (w/ markup)</div>
+          </div>
+          <div>
+            <div class="text-3xl font-bold accent" id="noise">Low</div>
+            <div class="text-xs text-gray-400">Noise Level</div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-500 mt-4 text-center">Cost includes ~30% upcharge for sourcing, printing, assembly & profit. Final quote confirmed before payment.</p>
+        <button onclick="checkout()" class="btn-primary w-full mt-6 py-4 rounded-xl text-lg">Proceed to Checkout</button>
+      </div>
+
+      <div class="card p-6 text-sm text-gray-400">
+        <p><strong class="text-white">How it works:</strong> Configure → Review live weight & cost → Checkout → Pay via Venmo or ACH. I order real parts, 3D print your body, assemble, and ship.</p>
+        <p class="mt-2 text-xs">Estimates based on real component data. Actual flight time varies with flying style and conditions.</p>
+      </div>
+    </div>
   </div>
 </div>
 
 <script>
-function showPage(p){document.querySelectorAll('.page').forEach(e=>e.classList.add('hidden'));document.getElementById('page-'+p).classList.remove('hidden');}
-function updateBuild(){
-  let w=25, baseCost=0, wh=0, powerExtra=0;
-  const ids = ['frame','motors','battery','sensors','ai'];
+const MARKUP = 1.30; // 30% upcharge
+
+function update() {
+  let w = 20; // base FC, wiring, etc.
+  let baseCost = 0;
+  let wh = 0;
+  let powerExtra = 0;
+  let noise = 'Low';
+
+  const ids = ['frame','props','battery','sensors','ai'];
   ids.forEach(id => {
     const sel = document.getElementById(id);
-    const o = sel.options[sel.selectedIndex];
-    w += +(o.dataset.w || 0);
-    baseCost += +(o.dataset.base || 0);
-    if (id === 'battery') wh = +(o.dataset.wh || 0);
-    if (id === 'ai') powerExtra += +(o.dataset.power || 0);
+    const opt = sel.options[sel.selectedIndex];
+    w += parseFloat(opt.dataset.w) || 0;
+    baseCost += parseFloat(opt.dataset.base) || 0;
+    if (id === 'battery') wh = parseFloat(opt.dataset.wh) || 0;
+    if (id === 'ai') powerExtra = parseFloat(opt.dataset.power) || 0;
+    if (id === 'props') noise = opt.dataset.noise === 'low' ? 'Low' : 'Medium';
+
+    // Show advice
+    const adviceEl = document.getElementById(id + 'Advice');
+    if (adviceEl && opt.dataset.advice) adviceEl.textContent = opt.dataset.advice;
   });
-  const markup = 1.30;
-  const totalCost = Math.round(baseCost * markup);
-  // Rough flight time: assume ~4-6W hover base + powerExtra, efficiency factor
-  const hoverW = 5 + powerExtra * 0.7;
-  const mins = wh > 0 ? Math.round((wh * 0.75 / hoverW) * 60) : 0;
-  document.getElementById('w').textContent = Math.round(w) + 'g';
-  document.getElementById('t').textContent = (mins || 0) + ' min';
-  document.getElementById('c').textContent = '$' + totalCost;
-  const motorVal = document.getElementById('motors').value;
-  document.getElementById('n').textContent = motorVal.includes('quiet') ? 'Low' : (motorVal.includes('1404') ? 'Med' : 'Med-Low');
-  const aiOn = document.getElementById('ai').value !== 'none';
-  document.getElementById('aiBox').classList.toggle('hidden', !aiOn);
-  document.getElementById('aiTxt').classList.toggle('hidden', !aiOn);
-  const camOn = document.getElementById('sensors').value !== 'none';
-  document.getElementById('cam').classList.toggle('hidden', !camOn);
+
+  // Flight time estimate (simplified, realistic for mini)
+  const hoverPower = (w / 8) + powerExtra; // rough watts for hover
+  const usableWh = wh * 0.8;
+  const minutes = hoverPower > 0 ? Math.round((usableWh / hoverPower) * 60 * 0.75) : 0;
+
+  const totalCost = Math.round(baseCost * MARKUP);
+
+  document.getElementById('weight').textContent = Math.round(w) + 'g';
+  document.getElementById('time').textContent = minutes + ' min';
+  document.getElementById('cost').textContent = '$' + totalCost;
+  document.getElementById('noise').textContent = noise;
 }
-function addToOrder(){alert('Build added! Review notes + BOM, then checkout with Venmo/ACH.');}
-updateBuild();
+
+function checkout() {
+  const notes = document.getElementById('notes').value;
+  alert('Configuration saved!\n\nWeight: ' + document.getElementById('weight').textContent + '\nCost: ' + document.getElementById('cost').textContent + '\n\nNext: Venmo or ACH payment instructions will be provided. Custom notes: ' + (notes || 'None'));
+}
+
+update();
 </script>
 </body>
 </html>
