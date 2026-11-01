@@ -1,0 +1,65 @@
+{
+  "revision": 2,
+  "notice": "Planning allowances only, not supplier quotes or tested component specifications. Envelope checks are configurator rules, not physical compatibility certification.",
+  "groups": {
+    "frame": {"label":"Frame / body","options":[
+      {"id":"micro_3d","label":"Micro printed open frame","grams":32,"cents":4500,"type":"open","diameters":[2],"payloadLimit":30},
+      {"id":"whoop_ducted","label":"Printed ducted frame","grams":38,"cents":5500,"type":"ducted","diameters":[2],"payloadLimit":25},
+      {"id":"tooth_cf","label":"Carbon toothpick frame","grams":45,"cents":7000,"type":"open","diameters":[2,3],"payloadLimit":60},
+      {"id":"enclosed_3d","label":"Printed enclosed body","grams":48,"cents":8000,"type":"enclosed","diameters":[2],"payloadLimit":40},
+      {"id":"custom_3d","label":"Custom frame — engineering quote required","grams":40,"cents":12000,"type":"custom","diameters":[2,3],"payloadLimit":300}
+    ]},
+    "propulsion": {"label":"Motor set (four motors)","options":[
+      {"id":"micro_2s","label":"2-inch / 2S motor-set concept","grams":24,"cents":4800,"cells":[2],"diameter":2},
+      {"id":"light_3s","label":"3-inch / 3S motor-set concept","grams":40,"cents":6400,"cells":[3],"diameter":3}
+    ]},
+    "props": {"label":"Propeller set (four propellers)","options":[
+      {"id":"stealth","label":"2-inch low-noise design concept","grams":8,"cents":1800,"diameter":2,"color":"#b9f27b"},
+      {"id":"multi","label":"2-inch multi-blade concept","grams":10,"cents":1500,"diameter":2,"color":"#4ade80"},
+      {"id":"standard","label":"2-inch bi-blade concept","grams":6,"cents":1200,"diameter":2,"color":"#c5cdd8"},
+      {"id":"three_inch","label":"3-inch bi-blade concept","grams":10,"cents":1600,"diameter":3,"color":"#8cbbe8"}
+    ]},
+    "battery": {"label":"Battery","options":[
+      {"id":"2s450","label":"2S 450 mAh LiPo","grams":28,"cents":2200,"cells":2,"mah":450},
+      {"id":"2s850","label":"2S 850 mAh LiPo","grams":42,"cents":2800,"cells":2,"mah":850},
+      {"id":"3s450","label":"3S 450 mAh LiPo","grams":38,"cents":2600,"cells":3,"mah":450}
+    ]},
+    "electronics": {"label":"Flight controller + four-channel ESC","options":[
+      {"id":"aio_2s","label":"2S controller / ESC concept","grams":8,"cents":6500,"cells":[2]},
+      {"id":"aio_3s","label":"2S–3S controller / ESC concept","grams":12,"cents":8500,"cells":[2,3]}
+    ]},
+    "receiver": {"label":"Control receiver","options":[
+      {"id":"elrs","label":"ELRS receiver concept","grams":2,"cents":2000},
+      {"id":"custom_rx","label":"Custom receiver — radio matching required","grams":4,"cents":3000}
+    ]},
+    "sensors": {"label":"Sensors / camera","options":[
+      {"id":"none","label":"None","grams":0,"cents":0},
+      {"id":"fpv_cam","label":"FPV camera + video-link allowance","grams":12,"cents":6500},
+      {"id":"hd_cam","label":"HD recording camera concept","grams":15,"cents":8500},
+      {"id":"lidar_mini","label":"Single-point ranging concept","grams":12,"cents":4500},
+      {"id":"lidar_scan","label":"Scanning LiDAR concept","grams":65,"cents":18000},
+      {"id":"imu_gps","label":"GPS / navigation sensor concept","grams":8,"cents":4000}
+    ]},
+    "ai": {"label":"Compute / software","options":[
+      {"id":"none","label":"No companion compute","grams":0,"cents":0},
+      {"id":"pi_zero","label":"Pi Zero-class compute allowance","grams":10,"cents":4500},
+      {"id":"pi5","label":"Pi 5-class compute + power/cooling allowance","grams":90,"cents":12500},
+      {"id":"hailo","label":"Vision accelerator + host/power/cooling allowance","grams":110,"cents":24500},
+      {"id":"coral","label":"TPU accelerator + host/power allowance","grams":105,"cents":16500},
+      {"id":"orin_nano","label":"Jetson-class compute + power/cooling allowance","grams":230,"cents":38000},
+      {"id":"cloud","label":"Remote compute / data-link allowance","grams":15,"cents":6000},
+      {"id":"custom_sw","label":"Custom software scope — quote required","grams":0,"cents":0}
+    ]},
+    "radio": {"label":"Handheld transmitter","options":[
+      {"id":"own","label":"I have a radio — compatibility review required","grams":0,"cents":0,"offboard":true},
+      {"id":"include","label":"Include an ELRS radio allowance","grams":0,"cents":10000,"offboard":true}
+    ]},
+    "charger": {"label":"Battery charger","options":[
+      {"id":"own","label":"I have a suitable balance charger","grams":0,"cents":0,"offboard":true},
+      {"id":"include","label":"Include charger + power supply allowance","grams":0,"cents":6000,"offboard":true}
+    ]}
+  },
+  "fixed": [
+    {"id":"integration","label":"Wiring, connectors, fasteners and basic mounts","grams":12,"cents":2000}
+  ]
+}

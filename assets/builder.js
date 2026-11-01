@@ -1,15 +1,17 @@
 /* Planning model inherited from the original configurator; not flight validation. */
-const fields = ['frame', 'props', 'battery', 'sensors', 'ai'];
+const fields = DroneModel.keys;
+const readingFields = Object.keys(DroneModel.limits);
+let canPersist = false;
 let group, renderer, scene, camera;
 let currentBuild;
-function selected(id) { return document.getElementById(id).selectedOptions[0]; }
+function selected(id) { return DroneModel.catalog.groups[id].options.find(o=>o.id===document.getElementById(id).value); }
 function rebuild3D() {
   if (!group) return;
   while (group.children.length) {
     const mesh = group.children[0];
     mesh.geometry.dispose(); mesh.material.dispose(); group.remove(mesh);
   }
-  const frame = selected('frame').dataset.type;
+  const frame = selected('frame').type;
   function mesh(geometry, color, x, y, z, rotation = 0) {
     const item = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({ color }));
     item.position.set(x,y,z); item.rotation.y = rotation; group.add(item); return item;
@@ -18,7 +20,7 @@ function rebuild3D() {
   for (const [x,z] of [[.95,.95],[-.95,.95],[.95,-.95],[-.95,-.95]]) {
     mesh(new THREE.BoxGeometry(.12,.09,1.36),0x7b8e83,x/2,0,z/2,Math.atan2(x,z));
     mesh(new THREE.CylinderGeometry(.12,.12,.2,16),0xb9f27b,x,.09,z);
-    mesh(new THREE.BoxGeometry(.8,.025,.10),selected('props').dataset.color,x,.23,z);
+    mesh(new THREE.BoxGeometry(.8*selected('props').diameter/2,.025,.10),selected('props').color,x,.23,z);
     if (frame === 'ducted') {
       const ring = mesh(new THREE.TorusGeometry(.49,.045,8,40),0x9db496,x,.13,z);
       ring.rotation.x = Math.PI/2;
@@ -52,45 +54,94 @@ function init3D() {
     container.textContent='3D preview is unavailable in this browser. The top-view diagram and configuration still work.';
   }
 }
-function update() {
-  let weight = 20, base = 0;
-  const values = {};
-  for (const id of fields) {
-    const option = selected(id); values[id] = option.value;
-    weight += Number(option.dataset.w) || 0; base += Number(option.dataset.base) || 0;
-    document.getElementById(id+'Info').textContent = option.dataset.info;
+function renderRows(result) {
+  const table=document.getElementById('bill-of-materials');table.replaceChildren();
+  for(const line of result.lines) {
+    const row=document.createElement('tr');
+    for(const value of [line.label,line.offboard?'—':String(line.grams),DroneModel.money(line.cents)]) {
+      const cell=document.createElement('td');cell.textContent=value;row.appendChild(cell);
+    }
+    table.appendChild(row);
   }
-  const usable = Number(selected('battery').dataset.wh)*.8;
-  const power = weight/7 + Number(selected('ai').dataset.power);
-  const minutes = Math.round(usable/power*60), cost = Math.round(base*1.3);
-  document.getElementById('weight').textContent=weight+' g';
-  document.getElementById('time').textContent=minutes+' min';
-  document.getElementById('cost').textContent='$'+cost;
-  document.getElementById('physicsNote').textContent=`Illustrative model: ${power.toFixed(1)} W hover; ${usable.toFixed(1)} Wh usable energy; 7 g/W assumed efficiency.`;
-  const heavy = weight >= 250;
-  const accelerator = ['hailo','coral'].includes(values.ai);
-  document.getElementById('compatibility').textContent = 'Engineering review required. '+(heavy?'This concept exceeds 250 g in the planning model. ':'')+(accelerator?'Accelerator needs a compatible host, not included in this estimate. ':'')+'Motors, ESC, controller, radio, wiring, mounting and power-system compatibility are not validated.';
-  document.querySelectorAll('.prop').forEach(el=>el.setAttribute('fill',selected('props').dataset.color));
-  const hasAI = !['none','cloud','custom_sw'].includes(values.ai);
-  for (const id of ['aiBox','aiLabel']) document.getElementById(id).classList.toggle('hidden',!hasAI);
+  document.getElementById('parts-subtotal').textContent=DroneModel.money(result.partsCents);
+  document.getElementById('margin-total').textContent=DroneModel.money(result.marginCents);
+  document.getElementById('planning-total').textContent=DroneModel.money(result.totalCents);
+}
+function saveCurrent() {
+  try {
+    localStorage.setItem(BUILD_KEY,JSON.stringify({values:currentBuild.values,measurements:currentBuild.measurements,notes:currentBuild.notes}));
+    canPersist=true; document.getElementById('save-status').textContent='Selections, notes and performance inputs saved in this browser.';
+  } catch {
+    canPersist=false;document.getElementById('save-status').textContent='Browser storage is unavailable. Download the brief and send it with a general inquiry; review handoff requires browser storage.';
+  }
+  document.getElementById('request-build').disabled=!currentBuild.result.ready || !canPersist;
+}
+function update() {
+  const values=Object.fromEntries(fields.map(id=>[id,document.getElementById(id).value]));
+  const readings=Object.fromEntries(readingFields.map(id=>[id,(document.getElementById(id).validity.badInput?'invalid':document.getElementById(id).value)]));
+  const result=DroneModel.calculate(values,readings);
+  const notes=document.getElementById('notes').value;
+  currentBuild={values:result.values,measurements:readings,notes,result,brief:DroneModel.brief(result,notes)};
+  for(const id of fields) {
+    const opt=selected(id);
+    document.getElementById(id+'Info').textContent=`${opt.offboard?'Ground equipment':opt.grams+' g onboard allowance'} · ${DroneModel.money(opt.cents)} allowance`+(id==='frame'?` · ${opt.payloadLimit} g payload planning envelope`:id==='battery'?` · ${(opt.cells*3.7).toFixed(1)} V nominal`:'');
+  }
+  document.getElementById('weight').textContent=result.massGrams.toFixed(1)+' g';
+  document.getElementById('cost').textContent=DroneModel.money(result.totalCents);
+  document.getElementById('energy').textContent=result.energyWh.toFixed(2)+' Wh';
+  document.getElementById('time').textContent=result.ready && result.hoverMinutes!==null ? result.hoverMinutes.toFixed(1)+' min' : result.ready?'Needs data':'Resolve conflicts';
+  document.getElementById('physicsNote').textContent=`Nominal ${result.nominalVolts.toFixed(1)} V × ${selected('battery').mah} mAh / 1000 = ${result.energyWh.toFixed(3)} Wh. Usable: ${result.usableWh?.toFixed(3) ?? 'unknown'} Wh with ${result.measurements.reserve ?? 'missing'}% reserve. No flight-time estimate without measured total hover power.`;
+  document.getElementById('thrust-result').textContent=`Thrust-to-weight: ${result.thrustRatio===null?'needs matching test data':result.thrustRatio.toFixed(2)+' : 1 (user-entered data)'}`;
+  document.getElementById('current-result').textContent=`Battery nominal continuous-current limit: ${result.maxBatteryAmps===null?'needs continuous C rating':result.maxBatteryAmps.toFixed(2)+' A'}; measured peak: ${result.measurements.peakAmps ?? 'not supplied'} A.`;
+  const compat=document.getElementById('compatibility'); compat.replaceChildren();
+  const heading=document.createElement('strong');heading.textContent=result.ready?'Planning checks passed — engineering review still required.':'Resolve these conflicts before requesting this build:';compat.appendChild(heading);
+  const issues=document.createElement('ul');
+  for(const error of result.errors) {const item=document.createElement('li');item.textContent=error;issues.appendChild(item);} compat.appendChild(issues);
+  const warningList=document.getElementById('review-notes');warningList.replaceChildren();
+  for(const warning of result.warnings) {const item=document.createElement('li');item.textContent=warning;warningList.appendChild(item);}
+  renderRows(result);
+  document.querySelectorAll('.prop').forEach(el=>{el.setAttribute('fill',selected('props').color);el.setAttribute('rx',selected('props').diameter===3?'42':'30');});
+  const hasAI=!['none','cloud','custom_sw'].includes(values.ai);
+  for(const id of ['aiBox','aiLabel']) document.getElementById(id).classList.toggle('hidden',!hasAI);
   document.getElementById('sensor').classList.toggle('hidden',values.sensors==='none');
-  document.getElementById('body').setAttribute('rx',selected('frame').dataset.type==='enclosed'?'28':'10');
-  document.getElementById('body').setAttribute('stroke',selected('frame').dataset.type==='ducted'?'#b9f27b':'#7dd3c0');
-  const notes = document.getElementById('notes').value;
-  const brief = 'SILENTFORGE / CONCEPT BUILD BRIEF\n\n'+fields.map(id=>id.toUpperCase()+': '+selected(id).textContent.trim()).join('\n')+`\n\nIllustrative mass: ${weight} g\nModel hover estimate: ${minutes} min\nComponent allowance: $${cost} USD\n\nNotes: ${notes || 'None'}\n\nPlanning only. No compatibility approval or flight specification. Component allowances + 30% margin exclude labor, complete propulsion/control system, shipping and taxes. Written review and quote required. No order or payment created.`;
-  currentBuild = {values,notes,brief};
-  try {localStorage.setItem(BUILD_KEY,JSON.stringify(currentBuild));document.getElementById('save-status').textContent='Configuration saved in this browser.';}
-  catch {document.getElementById('save-status').textContent='Browser storage is unavailable. Download your brief to keep it.';}
-  rebuild3D();
+  document.getElementById('body').setAttribute('rx',selected('frame').type==='enclosed'?'28':'10');
+  document.getElementById('body').setAttribute('stroke',selected('frame').type==='ducted'?'#b9f27b':'#7dd3c0');
+  saveCurrent();rebuild3D();
 }
-const saved = getBuild();
-if (saved) {
-  for(const id of fields) if ([...document.getElementById(id).options].some(o=>o.value===saved.values?.[id])) document.getElementById(id).value=saved.values[id];
-  if(typeof saved.notes==='string') document.getElementById('notes').value=saved.notes.slice(0,4000);
+function clearPerformance() {
+  for(const id of ['hoverWatts','thrustGrams','peakAmps','batteryC']) document.getElementById(id).value='';
 }
-for(const id of [...fields,'notes']) document.getElementById(id).addEventListener(id==='notes'?'input':'change',update);
-document.getElementById('download-build').addEventListener('click',()=>{
-  const url=URL.createObjectURL(new Blob([currentBuild.brief],{type:'text/plain'}));
-  const link=document.createElement('a'); link.href=url;link.download='silentforge-build-brief.txt';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+function applyValues(values,measurements={},notes='') {
+  for(const id of fields) document.getElementById(id).value=values[id]??DroneModel.defaults[id];
+  for(const id of readingFields) document.getElementById(id).value=measurements[id]??(id==='reserve'?20:id==='extraGrams'?0:'');
+  document.getElementById('notes').value=notes;
+}
+const saved=getBuild();
+applyValues(saved?.values||DroneModel.defaults,saved?.measurements||{},saved?.notes||'');
+for(const id of fields) document.getElementById(id).addEventListener('change',()=>{
+  if(!['radio','charger'].includes(id)) { clearPerformance(); document.getElementById('action-status').textContent='Onboard configuration changed. Previous performance inputs were cleared; enter test data for the new configuration.'; }
+  update();
 });
-init3D(); update();
+for(const id of [...readingFields,'notes']) document.getElementById(id).addEventListener('input',()=>{
+  if(id==='extraGrams')clearPerformance(); update();
+});
+document.getElementById('download-build').addEventListener('click',()=>downloadText(currentBuild.brief,'silentforge-build-brief.txt'));
+document.getElementById('request-build').addEventListener('click',()=>{
+  update();if(currentBuild.result.ready&&canPersist)window.location.assign('/review/');
+});
+document.getElementById('reset-build').addEventListener('click',()=>{
+  applyValues(DroneModel.defaults);document.getElementById('action-status').textContent='Build reset to starter defaults. Notes and performance inputs cleared.';update();
+});
+const presets={micro:{...DroneModel.defaults},camera:{...DroneModel.defaults,sensors:'hd_cam',battery:'2s850'},custom:{...DroneModel.defaults,frame:'custom_3d',propulsion:'light_3s',props:'three_inch',battery:'3s450',electronics:'aio_3s',ai:'pi_zero'}};
+for(const button of document.querySelectorAll('[data-preset]')) button.addEventListener('click',()=>{
+  const notes=document.getElementById('notes').value;applyValues(presets[button.dataset.preset],{},notes);document.getElementById('action-status').textContent='Preset applied. Performance inputs cleared; notes retained.';update();
+});
+document.getElementById('rotate-preview').addEventListener('click',()=>{
+  if(group){group.rotation.y+=Math.PI/4;renderer.render(scene,camera);}
+});
+document.getElementById('reset-camera').addEventListener('click',()=>{
+  if(group){group.rotation.y=0;renderer.render(scene,camera);}
+});
+init3D();
+if(!group)for(const id of ['rotate-preview','reset-camera'])document.getElementById(id).disabled=true;
+update();

@@ -34,6 +34,6 @@ for path,page in pages.items():
         if url.fragment and target in pages:
             assert unquote(url.fragment) in pages[target].ids, f'{path}: missing anchor {ref}'
         links+=1
-assert len(pages)==12, 'Expected 11 visitor pages and a 404 page'
+assert len(pages)==13, 'Expected 12 visitor pages and a 404 page'
 assert (root/'sitemap.xml').exists() and (root/'robots.txt').exists()
 print(f'PASS: {len(pages)} HTML documents; {links} internal links/assets; headings, descriptions, canonicals and anchors.')
