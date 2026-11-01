@@ -1,0 +1,18 @@
+{
+  "checks": {
+    "drone-math": {
+      "description": "Drone calculation and configuration regression tests",
+      "argv": [
+        "node",
+        "--test",
+        "scripts/model.test.cjs",
+        "scripts/site.test.cjs"
+      ],
+      "auto_extensions": [
+        ".js",
+        ".json",
+        ".cjs"
+      ]
+    }
+  }
+}
